@@ -8,8 +8,8 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-      List<String> letters = new ArrayList<>(Arrays.asList("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"));
-     List<String> morse = new ArrayList<>(Arrays.asList(".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--.."));
+      List<String> letters = new ArrayList<>(Arrays.asList("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", ""));
+     List<String> morse = new ArrayList<>(Arrays.asList(".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--..", ""));
 
       
         JFrame frame = new JFrame("Spacebar Detector");
@@ -27,21 +27,34 @@ public class Main {
           String numLength;
           boolean check = false;
           long seconds;
+          long checktime;
             @Override
             public void keyPressed(KeyEvent e) {
+                if (((System.currentTimeMillis()/1000)-checktime)>5&&check!=true) {
+                  word=word+letters.get(morse.indexOf(morseword));
+                  word=word+" ";
+                  System.out.println(word);
+                } else if (((System.currentTimeMillis()/1000)-checktime)>2&&check!=true) {
+                  word=word+letters.get(morse.indexOf(morseword));
+                    System.out.println(word);
+                    morseword="";
+                }
                 if (e.getKeyCode() == KeyEvent.VK_SPACE&&check!=true) {
                     label.setText("Spacebar pressed");
                   startTime=System.currentTimeMillis();
-                  System.out.println(startTime/1000);
                   check=true;
                 }
               numLength=Long.toString(System.currentTimeMillis());
-              seconds=(System.currentTimeMillis()/1000-startTime/1000);
-              System.out.println(seconds);
+               if (seconds!=(System.currentTimeMillis()/1000)-startTime/1000) {
+                   seconds=(System.currentTimeMillis()/1000)-startTime/1000;
+                 //System.out.print("\033[H\033[2J");
+                   System.out.println(seconds);
+                 }
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
+              checktime=System.currentTimeMillis()/1000;
                 if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                     label.setText("Spacebar released");
                    check=false;
@@ -51,20 +64,13 @@ public class Main {
                   } else if (seconds==3) {
                     morseword=morseword+"-";                               System.out.println(morseword);
 
-                  } else if (seconds==2) {
-                    word=word+letters.get(morse.indexOf(morseword));
-                    System.out.println(word);
-                    morseword="";
-                  
-                  } else if (seconds==5) {
-                    word = word + " ";
                   }
                    
                  
-                  System.out.println((System.currentTimeMillis()/1000)-startTime/1000);
-                  
+                
                 }
             }
+   
         });
 
         frame.setVisible(true);
